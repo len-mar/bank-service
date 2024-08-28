@@ -1,4 +1,7 @@
 package org.example;
 
-public record Client(String firstName, String lastName, String customerNumber) {
+import java.util.Set;
+
+public record Client(String firstName, String lastName, String clientNumber, Set<Account> accounts) {
+
 }
