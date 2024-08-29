@@ -1,16 +1,30 @@
 package org.example;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.math.BigDecimal;
 
 public class Account {
     private String accountNumber;
     private BigDecimal accountBalance;
     private Client client;
+    private BankService bankService;
 
-    public Account(String accountNumber, BigDecimal accountBalance, Client client) {
-        this.accountNumber = accountNumber;
-        this.accountBalance = accountBalance;
+    public Account(Client client, BankService bankService) {
+        // generates random String with size 10, no letters, just random numbers
+        this.accountNumber = RandomStringUtils.random(10, false, true);
+
+        // initializes balance at 0
+        this.accountBalance = BigDecimal.valueOf(0);
+
+        // adds account to client
         this.client = client;
+        client.clientAccounts().add(this);
+
+        // add account to BankService
+        this.bankService = bankService;
+        bankService.openAccount(this);
+
     }
 
     public String getAccountNumber() {

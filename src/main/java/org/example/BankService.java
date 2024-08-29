@@ -2,31 +2,37 @@ package org.example;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BankService {
-private Set<Account> accounts;
+private Map<String,Account> accounts;
 
-public String openAccount(Client client){
-    // generates random String with size 10, no letters, just random numbers
-    String newAccountNumber = RandomStringUtils.random(10, false, true);
-
-    // creates new Account object with balance 0
-    Account newAccount = new Account(newAccountNumber, BigDecimal.valueOf(0), client);
-
-    // adds new account to account set
-    accounts.add(newAccount);
-
-    // adds account to client
-    client.accounts().add(newAccount);
-
-    // returns account number
-    return newAccountNumber;
+public BankService(){
+    this.accounts = new HashMap<>();
 }
 
-public void transferFunds(String recipientAccountNumber, String senderAccountNumber){
-// todo: implement
+public String openAccount(Account account){
+//    Account newAccount = new Account(client, this);
+    accounts.put(account.getAccountNumber(), account);
+    return account.getAccountNumber();
 }
 
+public void transferFunds(String senderAccountNumber, String recipientAccountNumber, BigDecimal amount){
+// todo: implement from one account to the other via number
+    // todo: find accounts by number and store them somewhere
+    // todo: access sender and recipient account balances and modify them
+    // später noch der check mit genug cash aber hey
+    accounts.get(senderAccountNumber).withdraw(amount);
+    accounts.get(recipientAccountNumber).deposit(amount);
 
+}
+
+    public Map<String, Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Map<String, Account> accounts) {
+        this.accounts = accounts;
+    }
 }
