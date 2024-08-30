@@ -1,13 +1,21 @@
+// TODO: Write a method public List<String> split(String accountNumber) in the service that splits an account equally.
+//  From a joint account, individual accounts should be created for each account holder.
+//  It should return the newly created account numbers.
+//  Each account should receive the same amount of money after the split (+- 1 cent).
+//  Make sure that the bank does not incur any cent gains or losses during the process.
+// TODO: PS: as usual, our bank does not deal with half cents ;)
+// TODO: Tip: Test Driven Development is also very useful for solving this task! (applies to the following tasks as well)
 package org.example;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class Account {
     private String accountNumber;
     private BigDecimal accountBalance;
-    private Client client;
+    private ArrayList<Client> clients;
     private BankService bankService;
 
     public Account(Client client, BankService bankService) {
@@ -17,14 +25,21 @@ public class Account {
         // initializes balance at 0
         this.accountBalance = BigDecimal.valueOf(0);
 
-        // adds account to client
-        this.client = client;
+        // creates new client (account holder) list for this account
+        this.clients = new ArrayList<>();
+        // adds this client to list
+        clients.add(client);
+        // adds this account to existing client
         client.clientAccounts().add(this);
-
-        // add account to BankService
+        // adds account to BankService
         this.bankService = bankService;
         bankService.openAccount(this);
 
+    }
+
+    public void addClientToAccount(Client client) {
+        clients.add(client);
+        client.clientAccounts().add(this);
     }
 
     public String getAccountNumber() {
@@ -43,25 +58,26 @@ public class Account {
         this.accountBalance = accountBalance;
     }
 
-    public Client getClient() {
-        return client;
+    public ArrayList<Client> getClients() {
+        return clients;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClient(ArrayList<Client> clients) {
+        this.clients = clients;
     }
 
-    public void deposit(BigDecimal amount){
+    public void deposit(BigDecimal amount) {
         accountBalance = accountBalance.add(amount);
     }
 
-    public void withdraw(BigDecimal amount){
+    public void withdraw(BigDecimal amount) {
         // if amount to withdraw is more than available, print error
-        if(accountBalance.compareTo(amount) < 0){
+        if (accountBalance.compareTo(amount) < 0) {
             System.out.println("Insufficient funds.");
-        }
-        else{
+        } else {
             accountBalance = accountBalance.subtract(amount);
         }
     }
+
+
 }
