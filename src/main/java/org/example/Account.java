@@ -1,10 +1,3 @@
-// TODO: Write a method public List<String> split(String accountNumber) in the service that splits an account equally.
-//  From a joint account, individual accounts should be created for each account holder.
-//  It should return the newly created account numbers.
-//  Each account should receive the same amount of money after the split (+- 1 cent).
-//  Make sure that the bank does not incur any cent gains or losses during the process.
-// TODO: PS: as usual, our bank does not deal with half cents ;)
-// TODO: Tip: Test Driven Development is also very useful for solving this task! (applies to the following tasks as well)
 package org.example;
 
 import org.apache.commons.lang3.RandomStringUtils;
