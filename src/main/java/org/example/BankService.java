@@ -1,3 +1,7 @@
+// TODO: add centwise split so that the bank doesn't keep anything,
+//  but there's no more than a 1ct difference between new account balances
+// TODO: add interest
+
 package org.example;
 
 import org.apache.commons.lang3.RandomStringUtils;
