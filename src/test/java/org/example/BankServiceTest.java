@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,14 +20,21 @@ class BankServiceTest {
 
         BankService testBS = new BankService();
 
-        Account senderAccount = new Account(maxi, testBS);
+        String senderAccountNumber = testBS.openAccount(maxi);
+        String recipientAccountNumber = testBS.openAccount(bernd);
+        Account senderAccount = testBS.getAccounts().values()
+                .stream().filter(acc -> acc.getAccountNumber().equals(senderAccountNumber))
+                .findFirst().orElseThrow(NoSuchElementException::new);
+        Account recipientAccount = testBS.getAccounts().values()
+                .stream().filter(acc -> acc.getAccountNumber().equals(recipientAccountNumber))
+                .findFirst().orElseThrow(NoSuchElementException::new);
+
         BigDecimal amountToTransfer = BigDecimal.valueOf(10000);
         senderAccount.deposit(amountToTransfer);
-        Account recipientAccount = new Account(bernd, testBS);
 
 
         // When all funds are transferred from one account to the other
-        testBS.transferFunds(senderAccount.getAccountNumber(), recipientAccount.getAccountNumber(), amountToTransfer);
+        testBS.transferFunds(senderAccountNumber, recipientAccountNumber, amountToTransfer);
 
         // Then the sender should no longer have anything
         // And the recipient should have received the whole amount
@@ -36,27 +44,30 @@ class BankServiceTest {
 
 
     @Test
-    void split_shouldSplitEquallyIntoTwoSeparateAccounts_whenAmountIsEven() {
-        // Given two clients sharing the same account
+    void split_shouldSplitEquallyIntoTwoSeparateAccounts_whenAmountIsEven() throws Exception {
+        // GIVEN two clients sharing the same account
         Client maxi = new Client("Maxi", "Mustermann", "001");
         Client bernd = new Client("Bernd", "Das-Brot", "002");
 
         BankService testBS = new BankService();
+        String jointAccountNumber = testBS.openAccount(maxi);
 
-        Account jointAccount = new Account(maxi, testBS);
+        Account jointAccount = testBS.getAccounts().values()
+                .stream().filter(acc -> acc.getAccountNumber().equals(jointAccountNumber))
+                .findFirst().orElseThrow(NoSuchElementException::new);
         jointAccount.addClientToAccount(bernd);
 
-        // And the account has an even account balance
+        // AND the account has an even account balance
         BigDecimal amountToTransfer = BigDecimal.valueOf(10000);
         jointAccount.deposit(amountToTransfer);
 
-        // When the account is split
+        // WHEN the account is split
         List<String> newAccNumbers = testBS.split(jointAccount.getAccountNumber());
 
-        // Then there should be two new accounts with two different account numbers
+        // THEN there should be two new accounts with two different account numbers
         assertNotEquals(newAccNumbers.getFirst(), newAccNumbers.getLast());
 
-        // And both accounts should have half of the original balance in each account
+        // AND both accounts should have half of the original balance in each account
         assertEquals(testBS.getAccounts().get(newAccNumbers.getFirst()).getAccountBalance(), testBS.getAccounts().get(newAccNumbers.getLast()).getAccountBalance());
         assertEquals(testBS.getAccounts().get(newAccNumbers.getFirst()).getAccountBalance(), BigDecimal.valueOf(5000).setScale(2));
     }
@@ -69,8 +80,11 @@ class BankServiceTest {
         Client bernd = new Client("Bernd", "Das-Brot", "002");
 
         BankService testBS = new BankService();
+        String jointAccountNumber = testBS.openAccount(maxi);
 
-        Account jointAccount = new Account(maxi, testBS);
+        Account jointAccount = testBS.getAccounts().values()
+                .stream().filter(acc -> acc.getAccountNumber().equals(jointAccountNumber))
+                .findFirst().orElseThrow(NoSuchElementException::new);
         jointAccount.addClientToAccount(bernd);
 
         // And the account has an even account balance
@@ -89,7 +103,7 @@ class BankServiceTest {
     }
 
     @Test
-    void split_shouldSplitEquallyIntoThreeSeparateAccounts_whenAmountIsDivisibleByThree(){
+    void split_shouldSplitEquallyIntoThreeSeparateAccounts_whenAmountIsDivisibleByThree() {
         // Given three clients sharing the same account
         Client maxi = new Client("Maxi", "Mustermann", "001");
         Client bernd = new Client("Bernd", "Das-Brot", "002");
@@ -97,8 +111,11 @@ class BankServiceTest {
 
 
         BankService testBS = new BankService();
+        String jointAccountNumber = testBS.openAccount(maxi);
 
-        Account jointAccount = new Account(maxi, testBS);
+        Account jointAccount = testBS.getAccounts().values()
+                .stream().filter(acc -> acc.getAccountNumber().equals(jointAccountNumber))
+                .findFirst().orElseThrow(NoSuchElementException::new);
         jointAccount.addClientToAccount(bernd);
         jointAccount.addClientToAccount(bob);
 
@@ -124,7 +141,7 @@ class BankServiceTest {
     }
 
     @Test
-    void split_shouldSplitAlmostEquallyIntoThreeSeparateAccounts_whenAmountIsNotDivisibleByThree(){
+    void split_shouldSplitAlmostEquallyIntoThreeSeparateAccounts_whenAmountIsNotDivisibleByThree() {
 // todo: remember to allow for a one cent difference
 
         // Given three clients sharing the same account
@@ -134,8 +151,11 @@ class BankServiceTest {
 
 
         BankService testBS = new BankService();
+        String jointAccountNumber = testBS.openAccount(maxi);
 
-        Account jointAccount = new Account(maxi, testBS);
+        Account jointAccount = testBS.getAccounts().values()
+                .stream().filter(acc -> acc.getAccountNumber().equals(jointAccountNumber))
+                .findFirst().orElseThrow(NoSuchElementException::new);
         jointAccount.addClientToAccount(bernd);
         jointAccount.addClientToAccount(bob);
 

@@ -6,7 +6,6 @@ import lombok.With;
 import java.util.HashSet;
 import java.util.Set;
 
-@Builder
 @With
 public record Client(String firstName, String lastName, String clientNumber, Set<Account> clientAccounts) {
     public Client(String firstName, String lastName, String clientNumber) {
