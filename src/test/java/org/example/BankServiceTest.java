@@ -97,9 +97,10 @@ class BankServiceTest {
         // Then there should be two new accounts with two different account numbers
         assertNotEquals(newAccNumbers.getFirst(), newAccNumbers.getLast());
 
-        // And both accounts should have a bit less than half of the original balance in each account
-        assertEquals(testBS.getAccounts().get(newAccNumbers.getFirst()).getAccountBalance(), testBS.getAccounts().get(newAccNumbers.getLast()).getAccountBalance());
-        assertEquals(testBS.getAccounts().get(newAccNumbers.getFirst()).getAccountBalance(), BigDecimal.valueOf(5000.02));
+        // And both accounts should have a slightly different, but almost equal amount in each account
+        assertEquals(testBS.getAccounts().get(newAccNumbers.getFirst()).getAccountBalance(), BigDecimal.valueOf(5000.03));
+        assertEquals(testBS.getAccounts().get(newAccNumbers.get(1)).getAccountBalance(), BigDecimal.valueOf(5000.02));
+
     }
 
     @Test
@@ -173,10 +174,31 @@ class BankServiceTest {
 
 
         // And all three accounts should have a bit less than a third of the original balance in each account
-        assertEquals(testBS.getAccounts().get(newAccNumbers.get(0)).getAccountBalance(), testBS.getAccounts().get(newAccNumbers.get(1)).getAccountBalance());
+        assertEquals(testBS.getAccounts().get(newAccNumbers.get(0)).getAccountBalance(), BigDecimal.valueOf(4333.34));
+        assertEquals(testBS.getAccounts().get(newAccNumbers.get(1)).getAccountBalance(), BigDecimal.valueOf(4333.33));
         assertEquals(testBS.getAccounts().get(newAccNumbers.get(1)).getAccountBalance(), testBS.getAccounts().get(newAccNumbers.get(2)).getAccountBalance());
-        assertEquals(testBS.getAccounts().get(newAccNumbers.get(0)).getAccountBalance(), testBS.getAccounts().get(newAccNumbers.get(2)).getAccountBalance());
-
-        assertEquals(testBS.getAccounts().get(newAccNumbers.getFirst()).getAccountBalance(), BigDecimal.valueOf(4333.33));
     }
+
+    @Test
+    void creditInterest_shouldCreditCorrectInterest() {
+        // GIVEN one client with an account in our bank service
+        Client maxi = new Client("Maxi", "Mustermann", "001");
+
+        BankService testBS = new BankService();
+
+        String accountNumber = testBS.openAccount(maxi);
+        Account account = testBS.getAccounts().values()
+                .stream().filter(acc -> acc.getAccountNumber().equals(accountNumber))
+                .findFirst().orElseThrow(NoSuchElementException::new);
+
+        // AND a balance of 100
+        account.deposit(BigDecimal.valueOf(100));
+
+        // WHEN an interest of 5% is credited
+        testBS.creditInterest(accountNumber, 0.05);
+
+        // THEN the account balance should be 105
+        assertEquals(account.getAccountBalance(), BigDecimal.valueOf(105).setScale(2));
+    }
+
 }

@@ -1,9 +1,4 @@
 package org.example;
-// todo:
-//  transaction has an amount, a balance (new account balance after the transaction), a description (optional), and a date.
-//  The transactions should be implemented as records.
-//  To determine the current account balance, the BankService should return the balance of the last transaction.
-
 import lombok.Builder;
 import lombok.ToString;
 import lombok.With;

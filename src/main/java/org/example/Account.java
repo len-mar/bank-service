@@ -44,16 +44,22 @@ public class Account {
 
     public void deposit(BigDecimal amount) {
 //        accountBalance = accountBalance.add(amount);
-        transactions.add(new Transaction(TransactionType.DEPOSIT, amount, accountBalance.add(amount)));
+        transactions.add(new Transaction(TransactionType.DEPOSIT, amount, getAccountBalance().add(amount)));
+    }
+
+    public void creditInterest(BigDecimal amount) {
+//        accountBalance = accountBalance.add(amount);
+        transactions.add(new Transaction(TransactionType.INTEREST, amount, getAccountBalance().add(amount)));
     }
 
     public void withdraw(BigDecimal amount) {
         // if amount to withdraw is more than available, print error
-        if (accountBalance.compareTo(amount) < 0) {
+
+        if (getAccountBalance().equals(BigDecimal.ZERO)) {
             System.out.println("Insufficient funds.");
         } else {
 //            accountBalance = accountBalance.subtract(amount);
-            transactions.add(new Transaction(TransactionType.WITHDRAW, amount, accountBalance.subtract(amount)));
+            transactions.add(new Transaction(TransactionType.WITHDRAW, amount, getAccountBalance().subtract(amount)));
 
             System.out.println(amount + "€ successfully withdrawn.");
 
@@ -71,7 +77,7 @@ public class Account {
     }
 
     public void printTransactions(){
-
+        transactions.forEach(System.out::println);
     }
 
 }
