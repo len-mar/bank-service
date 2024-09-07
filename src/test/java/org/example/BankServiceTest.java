@@ -44,7 +44,7 @@ class BankServiceTest {
 
 
     @Test
-    void split_shouldSplitEquallyIntoTwoSeparateAccounts_whenAmountIsEven() throws Exception {
+    void split_shouldSplitEquallyIntoTwoSeparateAccounts_whenAmountIsEven() {
         // GIVEN two clients sharing the same account
         Client maxi = new Client("Maxi", "Mustermann", "001");
         Client bernd = new Client("Bernd", "Das-Brot", "002");
@@ -74,7 +74,6 @@ class BankServiceTest {
 
     @Test
     void split_shouldSplitAlmostEquallyIntoTwoSeparateAccounts_whenAmountIsOdd() {
-        // todo: remember to allow for a one cent difference
         // Given two clients sharing the same account
         Client maxi = new Client("Maxi", "Mustermann", "001");
         Client bernd = new Client("Bernd", "Das-Brot", "002");

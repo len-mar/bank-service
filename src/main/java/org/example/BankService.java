@@ -3,7 +3,6 @@
 package org.example;
 
 import lombok.Data;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -58,13 +57,13 @@ public class BankService {
 
         }
         // then adds remainder one by one until it's run out
-            for (String acc : temp) {
-                if (remainder.compareTo(BigDecimal.ZERO) == 0) {
-                    break;
-                }
-                accounts.get(acc).deposit(BigDecimal.valueOf(0.01));
-                remainder = remainder.subtract(BigDecimal.valueOf(0.01));
+        for (String acc : temp) {
+            if (remainder.compareTo(BigDecimal.ZERO) == 0) {
+                break;
             }
+            accounts.get(acc).deposit(BigDecimal.valueOf(0.01));
+            remainder = remainder.subtract(BigDecimal.valueOf(0.01));
+        }
 
         // returns list of new account numbers
         return temp;
