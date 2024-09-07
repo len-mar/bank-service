@@ -31,6 +31,8 @@ public class BankService {
 
     }
 
+    // fixme: make sure bank doesn't keep any cents and
+    //  account holders are ±1ct different in balance
     public List<String> split(String accountNumber) {
         // generates as many new accounts as there are clients
         int numberOfAccountHolders = accounts.get(accountNumber).getClients().size();
